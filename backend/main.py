@@ -90,5 +90,11 @@ async def predict(file: UploadFile = File(...)):
         }
     }
 
+@app.api_route('/health', methods=["GET", "HEAD"])
+def health():
+    return {
+        "status": "alive"
+    }
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
