@@ -5,7 +5,7 @@ import { BiLoaderAlt } from 'react-icons/bi';
 const ResultPopup = ({ result, image, loading, onClose }) => {
     // Show nothing if neither loading nor result exists
     if (!loading && !result) return null;
-
+    
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
             <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-mauve-900 border-2 border-white/20 rounded-2xl shadow-2xl p- scrollbar-hide">
