@@ -8,16 +8,16 @@ const ResultPopup = ({ result, image, loading, onClose }) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
-            <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-mauve-900 border-2 border-white/20 rounded-2xl shadow-2xl p-6 scrollbar-hide">
+            <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-mauve-900 border-2 border-white/20 rounded-2xl shadow-2xl p- scrollbar-hide">
 
                 {/* Header */}
-                <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+                <div className="flex items-center justify-between mb-6 p-4 border-b border-white/10">
                     <div>
                         <h2 className="text-2xl font-black text-white">
-                            CNN Prediction
+                            Prediction
                         </h2>
                         <p className="text-sm text-gray-400 mt-1">
-                            Steel defect classification result
+                            Steel defect classification
                         </p>
                     </div>
                     {!loading && (
@@ -44,7 +44,7 @@ const ResultPopup = ({ result, image, loading, onClose }) => {
                 ) : (
                     /* Existing Result View */
                     <>
-                        <div className="grid md:grid-cols-2 gap-6 items-center">
+                        <div className="grid md:grid-cols-2 px-6 gap-6 items-center">
                             {/* Image */}
                             <div className="aspect-square bg-stone-950 rounded-xl overflow-hidden border-2 border-white/10">
                                 <img
@@ -66,7 +66,7 @@ const ResultPopup = ({ result, image, loading, onClose }) => {
                                 {/* Confidence Bar */}
                                 <div className="py-2">
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="text-sm text-white font-semibold">Confidence</span>
+                                        <span className="text-sm text-gray-400">Confidence</span>
                                         <span className="font-black text-white">{result.prediction.confidence}%</span>
                                     </div>
                                     <div className="w-full h-3 bg-stone-950/80 rounded-full overflow-hidden border border-white/10">
@@ -81,21 +81,21 @@ const ResultPopup = ({ result, image, loading, onClose }) => {
                                 </div>
 
                                 {/* Model Metadata */}
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="bg-stone-800/30 rounded-xl p-3 border border-white/10">
+                                <div className="">
+                                    {/* <div className="bg-stone-800/30 rounded-xl p-3 border border-white/10">
                                         <p className="text-xs text-gray-500">Input size</p>
                                         <p className="text-white font-bold">{result.image.input_size}</p>
-                                    </div>
-                                    <div className="bg-stone-800/30 rounded-xl p-3 border border-white/10">
-                                        <p className="text-xs text-gray-500">Inference time</p>
-                                        <p className="text-white font-bold">{result.inference.time_ms} ms</p>
+                                    </div> */}
+                                    <div className="p-">
+                                            <p className="text-sm text-gray-400 pb-2">Inference Time</p>
+                                            <p className={`text-white font-bold class-text-${result.prediction.class}`}>{result.inference.time_ms} ms</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* Probabilities */}
-                        <div className="mt-8">
+                        <div className="mt-8 px-6 pb-6">
                             <h3 className="text-lg font-black text-white mb-4">Class Probabilities</h3>
                             <div className="space-y-3">
                                 {Object.entries(result.probabilities).map(([className, probability]) => (
@@ -118,7 +118,7 @@ const ResultPopup = ({ result, image, loading, onClose }) => {
                             </div>
                         </div>
 
-                        {/* Extra Metadata Footer */}
+                        {/* Extra Metadata Footer
                         <div className="mt-4 pt-5 grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div>
                                 <p className="text-xs text-gray-500">Model</p>
@@ -136,7 +136,7 @@ const ResultPopup = ({ result, image, loading, onClose }) => {
                                 <p className="text-xs text-gray-500">Channels</p>
                                 <p className="text-sm text-white font-bold">{result.image.channels}</p>
                             </div>
-                        </div>
+                        </div> */}
                     </>
                 )}
             </div>
