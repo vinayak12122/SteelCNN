@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+.prediction-high {
+    background: linear-gradient(90deg,
+            #f97316,
+            #f59e0b,
+            #facc15);
+}
+
+.prediction-low {
+    background: linear-gradient(90deg,
+            #14b8a6,
+            #06b6d4,
+            #38bdf8);
+}
+
+.animate-progress-dots {
+    background-image:
+        radial-gradient(rgba(255, 255, 255, 0.9) 1px,
+            transparent 1.5px);
+
+    background-size: 7px 7px;
+
+    animation: progressDots 0.7s linear infinite;
+}
+
+@keyframes progressDots {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 7px 0;
+    }
+}
+
+.animate-progress-shine {
+    animation: progressShine 2.2s ease-in-out infinite;
+}
+
+@keyframes progressShine {
+    0% {
+        transform: translateX(-150%);
+    }
+
+    50% {
+        transform: translateX(350%);
+    }
+
+    100% {
+        transform: translateX(350%);
+    }
+}
+
+.class-crazing {
+    background: linear-gradient(90deg, #7c3aed, #a855f7, #c084fc);
+}
+
+.class-inclusion {
+    background: linear-gradient(90deg, #ea580c, #f97316, #fbbf24);
+}
+
+.class-patches {
+    background: linear-gradient(90deg, #0891b2, #06b6d4, #38bdf8);
+}
+
+.class-pitted_surface {
+    background: linear-gradient(90deg, #059669, #10b981, #34d399);
+}
+
+.class-rolled_in_scale {
+    background: linear-gradient(90deg, #be123c, #e11d48, #fb7185);
+}
+
+.class-scratches {
+    background: linear-gradient(90deg, #ca8a04, #eab308, #a3e635);
+}
+
+.class-text-crazing {
+    color: #c084fc;
+}
+
+.class-text-inclusion {
+    color: #fb923c;
+}
+
+.class-text-patches {
+    color: #22d3ee;
+}
+
+.class-text-pitted_surface {
+    color: #34d399;
+}
+
+.class-text-rolled_in_scale {
+    color: #fb7185;
+}
+
+.class-text-scratches {
+    color: #bef264;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
