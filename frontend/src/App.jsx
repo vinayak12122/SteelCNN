@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ImPlus } from "react-icons/im";
 import { BiLoaderAlt } from "react-icons/bi";
-import ImgPopup from './Components/ImgPopup'
-import ResultPopup from './Components/ResultPopup'
+import ImgPopup from './Components/ImgPopup';
+import ResultPopup from './Components/ResultPopup';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -10,77 +10,80 @@ const App = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [loader, setLoader] = useState(false);
-  const [prediction,setPrediction] = useState(false);
+  const [prediction, setPrediction] = useState(null);
 
   const fileInputRef = useRef(null);
+
+  // Clean up Object URL memory leakage
+  useEffect(() => {
+    return () => {
+      if (selectedImage && selectedImage.startsWith('blob:')) {
+        URL.revokeObjectURL(selectedImage);
+      }
+    };
+  }, [selectedImage]);
+
   const handleDeviceImage = (event) => {
     const file = event.target.files[0];
-
     if (!file) return;
 
+    setPrediction(null);
     const imgUrl = URL.createObjectURL(file);
-    setLoader(true);
     setSelectedImage(imgUrl);
     predictImage(file);
-  }
+  };
 
-  const handlePreloadedImage = async(image) => {
+  const handlePreloadedImage = async (image) => {
     try {
-      setLoader(true)
+      setPrediction(null);
       setSelectedImage(image);
       setShowPopup(false);
 
       const response = await fetch(image);
       const blob = await response.blob();
 
-      const file = new File(
-        [blob],image.split("/").pop(),
-        {
-          type:blob.type,
-        }
-      );
+      const file = new File([blob], image.split("/").pop(), {
+        type: blob.type,
+      });
 
-      await predictImage(file)
+      await predictImage(file);
     } catch (error) {
-      alert("Error : ",error);
+      alert(`Error loading image: ${error.message || error}`);
       setLoader(false);
     }
-  }
+  };
 
-  const handleImageLoad = () => {
-    setLoader(false);
-  }
-
-  const predictImage = async(image)=>{
+  const predictImage = async (image) => {
     try {
       setLoader(true);
       const formData = new FormData();
-      formData.append("file",image);
+      formData.append("file", image);
 
-      const res = await fetch(`${BACKEND_URL}/predict`,{
-        method:"POST",
-        body:formData
-      })
+      const res = await fetch(`${BACKEND_URL}/predict`, {
+        method: "POST",
+        body: formData,
+      });
 
-      if(!res.ok){
+      if (!res.ok) {
         throw new Error("Prediction failed");
       }
 
       const result = await res.json();
       setPrediction(result);
     } catch (error) {
-      alert("Error : ",error);
-    }finally{
+      alert(`Error predicting image: ${error.message || error}`);
+    } finally {
       setLoader(false);
     }
   };
+
   return (
     <div className="relative min-h-screen w-screen bg-mauve-900 overflow-hidden">
       <input
         ref={fileInputRef}
-        type='file'
-        accept='image/*'
-        className='hidden'
+        type="file"
+        accept="image/*"
+        className="hidden"
         onChange={handleDeviceImage}
       />
       <style>{`
@@ -122,6 +125,7 @@ const App = () => {
         }
       `}</style>
 
+      {/* Background Watermark */}
       <div className="absolute -mb-8 md:-mb-40 inset-0 flex lg:items-center items-end justify-center pointer-events-none select-none overflow-hidden">
         <h1
           className="
@@ -143,38 +147,28 @@ const App = () => {
       {/* Main Content */}
       <div className="flex flex-col justify-center items-center gap-2 mb-8">
 
-        {/* Upload Icon */}
+        {/* Upload Icon & Image Preview Container */}
         <div className="relative flex items-center justify-center md:w-80 md:h-60 gap-2 m-20 py-0 w-[80%] h-60 border-4 border-gray-300 rounded-xl bg-stone-800/50 shadow-lg overflow-hidden">
-          {
-            loader && (
-              <BiLoaderAlt className='absolute z-20 text-yellow-400 text-6xl animate-spin' />
-            )
-          }
+          {loader && (
+            <BiLoaderAlt className="absolute z-20 text-yellow-400 text-6xl animate-spin" />
+          )}
 
-          {
-            selectedImage ? (
-              <img
-                src={selectedImage}
-                alt="Selected steel defect"
-                onLoad={handleImageLoad}
-                className={`w-full  h-full  object-cover  transition-opacity  duration-300  ${loader ? "opacity-0" : "opacity-100"}`}
-              />
-            ) : (
-              <ImPlus
-                className=" text-yellow-400 md:text-9xl text-8xl md:p-6 p-3"
-              />
-            )
-          }
-          {/* <p className="text-white font-bold">
-            {selectedImage ? " " : "Upload a picture"}
-          </p> */}
+          {selectedImage ? (
+            <img
+              src={selectedImage}
+              alt="Selected steel defect"
+              className={`w-full h-full object-cover transition-opacity duration-300 ${loader ? "opacity-0" : "opacity-100"
+                }`}
+            />
+          ) : (
+            <ImPlus className="text-yellow-400 md:text-9xl text-8xl md:p-6 p-3" />
+          )}
         </div>
 
+        {/* Controls */}
         <div className="flex flex-col gap-6 w-full justify-center items-center px-5 sm:px-0">
-
           <button
-
-            onClick={() => fileInputRef.current.click()}
+            onClick={() => fileInputRef.current?.click()}
             className="
               relative p-0.5
               cursor-pointer
@@ -198,13 +192,10 @@ const App = () => {
             "
           >
             <div className="relative pointer-events-none bg-yellow-400 border-2 border-white/30 rounded-full overflow-hidden">
-
               <div className="absolute inset-0 rounded-full opacity-50 mix-blend-hard-light animate-dots" />
-
               <span className="relative flex items-center justify-center py-3 px-6 gap-1 drop-shadow-[0_-1px_0_rgba(255,255,255,0.25)]">
                 Choose from device
               </span>
-
             </div>
           </button>
 
@@ -237,24 +228,23 @@ const App = () => {
             "
           >
             <div className="relative pointer-events-none bg-cyan-400 border-2 border-white/30 rounded-full overflow-hidden">
-
               <div className="absolute inset-0 rounded-full opacity-50 mix-blend-hard-light animate-dots" />
-
               <span className="relative flex items-center justify-center py-3 px-6 gap-1 drop-shadow-[0_-1px_0_rgba(255,255,255,0.25)]">
                 Choose pre-loaded image
               </span>
-
             </div>
           </button>
-
         </div>
       </div>
+
+      {/* Popups */}
       {showPopup && (
         <ImgPopup
           onClose={() => setShowPopup(false)}
           onSelect={handlePreloadedImage}
         />
       )}
+
       {(loader || prediction) && (
         <ResultPopup
           result={prediction}
