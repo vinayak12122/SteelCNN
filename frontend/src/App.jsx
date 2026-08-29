@@ -255,15 +255,14 @@ const App = () => {
           onSelect={handlePreloadedImage}
         />
       )}
-      {
-        prediction && (
-          <ResultPopup
-            result={prediction}
-            image={selectedImage}
-            onClose={() => setPrediction(null)}
-          />
-        )
-      }
+      {(loader || prediction) && (
+        <ResultPopup
+          result={prediction}
+          image={selectedImage}
+          loading={loader}
+          onClose={() => setPrediction(null)}
+        />
+      )}
     </div>
   );
 };
