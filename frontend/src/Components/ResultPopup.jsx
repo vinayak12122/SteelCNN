@@ -37,7 +37,7 @@ const ResultPopup = ({ result, image, loading, onClose }) => {
                         <h3 className="text-xl font-bold text-white">
                             Analyzing Image...
                         </h3>
-                        <p className="text-sm text-gray-400 max-w-md">
+                        <p className="text-sm text-gray-400 max-w-md px-4">
                             Please wait while the model processes your image. Since backend is running on Render free tier, starting up can take a few seconds.
                         </p>
                     </div>
